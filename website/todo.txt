@@ -1,0 +1,15 @@
+click counting
+	tracking clicks page
+QR code
+
+
+UTM parameters
+	links: https://blog.hootsuite.com 
+		how to use utm paramaters
+	=> predefined text codes added to a URL to track importanct data about website visitors and traffic sources
+	PARAMETERS:
+		1. campaign source
+		2. campaign medium
+		3. campaign name
+		4. campaign term
+		5. campaign content

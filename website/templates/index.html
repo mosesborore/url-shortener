@@ -1,0 +1,51 @@
+
+{% extends 'base.html'  %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+    <title>Home: url shortner</title>
+{% endblock %}
+
+{% block body %}
+    
+    <br>
+    <h1 align="center">Url shortener</h1>
+        <br>
+        <form action="/shorten" method="post" enctype="multipart/form-data" class="my-4 form-inline">
+            <label for="fullurl" class="sr-only">URL</label>
+            <input required type="url" name="fullURL" id="" placeholder="Enter url..." class="form-control col mr-2"/>
+            <br>
+            <button type="submit" class="btn btn-primary">Shorten</button>
+        </form>
+    
+
+        {% if data %}
+                <div>
+                    <h5 >Short url: <a id="shortUrl" href='' target="_blank"> {{data}}</a></h5>
+                </div>
+        {% endif %}
+
+
+
+    <script>
+        // function to add the short url
+        const addHref = () =>{
+            let a = document.getElementById('shortUrl');
+
+           try{
+                a.href = "http://"+window.location.host+"/s/"+ a.innerHTML.replace(" ", "")
+                a.innerHTML = a.href 
+                console.log(a)
+           }catch(TypeError){
+               console.error("the innerHTML value is null")
+           }
+            
+        }
+        addHref();
+    </script>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,42 @@
+
+{% extends 'base.html'  %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+    <title>all</title>
+{% endblock %}
+
+{% block body %}
+
+    <h1>All the details in the database </h1>
+    <BR></BR>
+    <table class="table table-dark table-responsive table-hover">   
+        <thead>
+            <th colspan="3" > Transaction Table</th>  
+            <tr>       
+                <th scope="col">url </th>       
+                <th scope="col">shortened_url</th>       
+            </tr>   
+        </thead>   
+        <tbody>
+            {% if data %}
+                {% for d in data['all'] %}
+                <tr>
+                    <td><a href="{{ d['long_url'] }}"> {{ d['long_url'] }}</a> </td>
+                    <td><a href="{{ d['long_url']}}"> {{ d['short_url']}} </a> </td>
+
+                </tr>
+                {% endfor %}
+            {% endif%}   
+        </tbody> 
+    </table>
+
+{% endblock %}
+
+
+
+
+
+
+
