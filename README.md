@@ -1,5 +1,6 @@
 # url-shortner
-URL shortener using flask and PostgreSQL
+URL shortener using flask and PostgreSQL🎉
+Screenshots coming
 
 
 # Remaining work
