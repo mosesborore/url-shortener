@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, url_for, redirect, flash
 from .util import base62_decode, base62_encode
-from .model import database
+from . import db
+from .models import UrlData
+
 
 views = Blueprint('views', __name__, static_folder='static', template_folder='templates')
 
@@ -11,38 +13,41 @@ def index():
 
 @views.route("/shorten", methods=['GET', 'POST'])
 def shorten_url():
-    if request.method == "POST":
-        full_url = request.form.get("fullURL")
+    if request.method == 'POST':
+        long_url = request.form.get("fullURL")
 
-        if full_url:
-            # insert the url to the database
-            database.insert_new_entry(full_url)
+        if long_url:
+            new_url = UrlData(long_url=long_url)
+            db.session.add(new_url)
+            
 
-            # get the id for the new entry
-            url_id = database.get_last_entry()['id']
+            # get the last entry
+            last_entry = db.session.query(UrlData).order_by().all()[-1]
 
-            # encode the url_id to base62 equivalent
-            # which is used as the short url version of
-            # of the "full_url"
+            # get the id
+            url_id = last_entry.url_id
+
+            # get short_url using the url_id
             short_url = base62_encode(url_id)
 
-            # update the short_url column
-            database.update_short_url(url_id, short_url)
-        return render_template('index.html', data= short_url)
+            last_entry.short_url = short_url
+
+            db.session.commit()
+            return render_template('index.html', data=short_url)
     return redirect(url_for('views.index'))
 
 
 @views.route("/all")
 def all_urls():
-    data = {'all': []}
+    urls = UrlData.query.all()
 
-    data = {'all': []}
+    data = {"all": []}
 
-    for i in database.select_all():
-        temp = {'id': i[0],
-                'long_url': i[1],
-                'short_url': i[2]}
+    count = 1
+    for url in urls:
+        curr = {"count": count,"long_url": url.long_url, "short_url": url.short_url, "clicks": url.clicks}
 
-        data['all'].append(temp)
+        count += 1
+        data['all'].append(curr)
 
-    return render_template('all.html', data=data)
+    return jsonify(data)

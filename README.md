@@ -1,10 +1,15 @@
 # url-shortner
+
 URL shortener using flask and PostgreSQL🎉
-Screenshots coming
 
+[![Home page screenshot](./screenshots/home-page.png)]
 
-# Remaining work
-Setting up SQLAlchemy to use to interact with the PostgreSQL database. This will be implement in the __website.models.py__ file
+## how to run it
 
-# Interacting with the database
-Currently, to access, alter or insert information into the database. _website.model_ package contain _database.py_ that accomplished this.
+1. create virtual environment. **virtualenv env**
+
+2. activate the *env* - __env\scripts\activate__
+
+3. run **pip install -r requirements.txt**
+
+4. run **python main.py**

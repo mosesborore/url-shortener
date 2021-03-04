@@ -13,20 +13,16 @@ def create_app():
 
 	db.init_app(app)
 
-	from .models import UrlData
-	create_db(app)
 
 	from .views import views
 	from .redirection import origin
 
 
 	app.register_blueprint(views, url_prefix='')
-	app.register_blueprint(origin, url_prefix='/s/')
+	app.register_blueprint(origin, url_prefix='/')
 
-
+	with app.app_context():
+		# create the database IF NOT EXISTS
+		db.create_all()
 
 	return app
-
-
-def create_db(app):
-	db.create_all(app=app)

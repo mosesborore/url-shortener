@@ -13,36 +13,82 @@
     <h1 align="center">Url shortener</h1>
         <br>
         <form action="/shorten" method="post" enctype="multipart/form-data" class="my-4 form-inline">
-            <label for="fullurl" class="sr-only">URL</label>
-            <input required type="url" name="fullURL" id="" placeholder="Enter url..." class="form-control col mr-2"/>
-            <br>
-            <button type="submit" class="btn btn-primary">Shorten</button>
+            <fieldset>
+                <label for="fullurl" class="sr-only">URL</label>
+                <input required type="url" id="fullURL" name="fullURL" id="" placeholder="Enter URL to shorten" class="form-control col mr-2"/>
+                <br>
+                <button type="submit" class="btn btn-primary">Shorten</button>
+                
+            </fieldset>
+            
         </form>
     
 
         {% if data %}
                 <div>
-                    <h5 >Short url: <a id="shortUrl" href='' target="_blank"> {{data}}</a></h5>
+                    <h5 >Short url: <a rel="noopener" id="shortUrl" href='' target="_blank" style="text-decoration: none;"> {{ data }}</a></h5>
+                    <button id="copyShortURL" class="btn btn-primary" onclick="copyToClipboard()">COPY</button>
                 </div>
+
+                <div id="qrcode-header" style="height: 50px; line-height: 10px;">
+                    <br>
+                    <h5>QRCODE</h5>
+                </div>
+
+                <div id="qrcode">
+                    
+                </div>
+
         {% endif %}
 
 
 
+
+    <script src="{{ url_for('static', filename='js/qrcode.min.js') }}"></script>
     <script>
         // function to add the short url
         const addHref = () =>{
             let a = document.getElementById('shortUrl');
+            let input = document.getElementById("fullURL")
 
            try{
-                a.href = "http://"+window.location.host+"/s/"+ a.innerHTML.replace(" ", "")
+                a.href = "http://"+window.location.host+"/"+a.innerHTML.replace(" ", "")
                 a.innerHTML = a.href 
-                console.log(a)
+                console.log(a.innerHTML)
+
+                // place the short-url as placeholder
+                input.placeholder = a.href;
+
+                // generate the qrcode
+                var qrcode =  new QRCode("qrcode");
+                qrcode.makeCode(a.innerHTML);
            }catch(TypeError){
                console.error("the innerHTML value is null")
            }
             
         }
+
         addHref();
+
+
+        async function copyToClipboard(){
+            let a = document.getElementById('shortUrl');
+            text = a.href;
+            
+            if(!navigator.clipboard){
+                // clipboard API not available
+                return
+            }
+
+            try{
+                await navigator.clipboard.writeText(text);
+                alert("shortened URL has been copied to the clipboard")
+                
+            }catch(err){
+                console.log("Faild to copy", err);
+            }
+    }
+
     </script>
 
 {% endblock %}
