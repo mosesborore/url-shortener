@@ -1,25 +1,21 @@
-from flask import Blueprint, render_template, request, url_for, redirect, flash
+from flask import Blueprint, render_template, request, url_for, redirect, flash, jsonify
 from .util import base62_decode, base62_encode
 from . import db
 from .models import UrlData
 
 
-views = Blueprint('views', __name__, static_folder='static', template_folder='templates')
+views = Blueprint('views', __name__, static_folder='static',
+                  template_folder='templates')
 
 
-@views.route("/")
+@views.route("/", methods=['GET', 'POST'])
 def index():
-    return render_template("index.html")
-
-@views.route("/shorten", methods=['GET', 'POST'])
-def shorten_url():
     if request.method == 'POST':
         long_url = request.form.get("fullURL")
 
         if long_url:
             new_url = UrlData(long_url=long_url)
             db.session.add(new_url)
-            
 
             # get the last entry
             last_entry = db.session.query(UrlData).order_by().all()[-1]
@@ -34,6 +30,12 @@ def shorten_url():
 
             db.session.commit()
             return render_template('index.html', data=short_url)
+    return render_template("index.html")
+
+
+@views.route("/shorten", methods=['GET', 'POST'])
+def shorten_url():
+
     return redirect(url_for('views.index'))
 
 
@@ -45,7 +47,8 @@ def all_urls():
 
     count = 1
     for url in urls:
-        curr = {"count": count,"long_url": url.long_url, "short_url": url.short_url, "clicks": url.clicks}
+        curr = {"count": count, "long_url": url.long_url,
+                "short_url": url.short_url, "clicks": url.clicks}
 
         count += 1
         data['all'].append(curr)
