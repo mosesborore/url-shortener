@@ -4,13 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 def create_app():
-	app = Flask(__name__)
+	app = Flask(__name__, instance_relative_config=True)
 
-	app.config['SECRET_KEY'] = 'urlshortner'
-	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-	# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://username:password@hostname:port/databasename"
-	app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://borore:borore1234@localhost:5432/urlmanager"
-
+	# LOAD CONFIGATIONS from instance/config.py
+	app.config.from_pyfile("config.py")
 	db.init_app(app)
 
 
@@ -21,8 +18,8 @@ def create_app():
 	app.register_blueprint(views, url_prefix='')
 	app.register_blueprint(origin, url_prefix='/')
 
-	with app.app_context():
-		# create the database IF NOT EXISTS
-		db.create_all()
+	# with app.app_context():
+	# 	# create the database IF NOT EXISTS
+	# 	db.create_all()
 
 	return app
