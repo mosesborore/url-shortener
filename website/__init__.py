@@ -14,6 +14,9 @@ def create_app():
 	from .views import views
 	from .redirection import origin
 
+	with app.app_context():
+		db.create_all()
+
 
 	app.register_blueprint(views, url_prefix='')
 	app.register_blueprint(origin, url_prefix='/')

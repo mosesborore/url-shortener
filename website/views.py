@@ -18,7 +18,7 @@ def index():
             db.session.add(new_url)
 
             # get the last entry
-            last_entry = db.session.query(UrlData).order_by().all()[-1]
+            last_entry = UrlData.query.all()[-1]
 
             # get the id
             url_id = last_entry.url_id
@@ -35,7 +35,6 @@ def index():
 
 @views.route("/shorten", methods=['GET', 'POST'])
 def shorten_url():
-
     return redirect(url_for('views.index'))
 
 
