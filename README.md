@@ -2,6 +2,8 @@
 
 URL shortener using flask and PostgreSQL🎉
 
+URL https://flask-url-shortly.herokuapp.com/
+
 [![Home page screenshot](./screenshots/home-page.png)]
 
 ## how to run it
